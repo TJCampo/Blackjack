@@ -4,13 +4,14 @@
 using std::vector;
 
 //establish values and suits for cards
-enum Value {ACE = 1, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK = 10, QUEEN = 10, KING = 10};
+enum Value {ACE = 1, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING};
 enum Suit {HEARTS, SPADES, DIAMONDS, CLUBS};
 //create a data struct for a card that has the basic components of what a card will be
 struct Card 
 {
     Suit suit;
     Value value;
+    int num;
     int numOfSuits = 4;
     int numOfValues = 13;
 };
@@ -61,7 +62,7 @@ void evaluate()
 
 };
 
-void setupDeck(Deck&);
+void setupDeck(Deck);
 void Deal(Deck&);
 void resetHand();
 void evaluate();
@@ -85,25 +86,17 @@ void loop()
     while(l < 100)
     {
         //checks if j is under two and then will stop working. This deals two cards before everything else starts.
-        if(j > 2)
-        {
-         for(j = 0; j < 2; j++)
-          {
-            player.Deal(mainDeck);
-            dealer.Deal(mainDeck);
-          }
-        }
-        else
-        {
-            //starts a repeating loop of checking and printing the results
+     player.Deal(mainDeck);
+     dealer.Deal(mainDeck);
+             //starts a repeating loop of checking and printing the results
         player.evaluate();
         dealer.evaluate();
         tallyScores(player, dealer);
-        }
     }
     player.resetHand();
     dealer.resetHand();
     mainDeck.cards.clear();
+    l++;
 }
 
 //checks player and dealers scores and prints to the console
@@ -134,9 +127,7 @@ void loop()
 
 void setupDeck(Deck deck)
 {
-    //will run 52 times to create each card individually.
-    for(int count = 0; count < deck.deckSize; count++)
-    {
+    
         Card card;
         //increments the suit that is assigned to the card
         for(int suit = 0; suit < card.numOfSuits; suit++)
@@ -148,8 +139,31 @@ void setupDeck(Deck deck)
                 card.suit = Suit(suit);
                 card.value = Value(value);
                 Card card;
+                card.num = card.value +1;
                 deck.cards.push_back(card);
             }
         }
-    }
+
+        for(Card c : deck.cards)
+        {
+            switch(c.value)
+            {
+            case 0:
+            c.num = 1;
+            break;
+
+            case JACK:
+            c.num = 10;
+            break;
+
+            case QUEEN:
+            c.num = 10;
+            break;
+            
+            case KING:
+            c.num = 10;
+            break;
+            }
+        }
+
 }
